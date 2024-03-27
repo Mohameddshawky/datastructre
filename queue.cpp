@@ -75,7 +75,6 @@ int main() {
     q.enqueue("mo");
     q.enqueue("suii");
     q.enqueue("shawky");
-    q.enqueue("za3lan");
     q.print();
     q.clear();
     q.enqueue("ahmed");

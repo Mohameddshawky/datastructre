@@ -1,2 +1,2 @@
-# datastructre
-some implementation to data structre
+# data structre
+some implementation for data structre

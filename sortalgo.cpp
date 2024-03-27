@@ -84,10 +84,10 @@ int i=l;
         }
     }
     swap(arr[l],arr[i]);
-    for (int x = 0; x <=r ; ++x) {
+  /*  for (int x = 0; x <=r ; ++x) {
         cout<<arr[x]<<" ";
     }
-    cout<<'\n';
+    cout<<'\n';*/
     return i;
 
 }

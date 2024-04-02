@@ -12,15 +12,19 @@ void insertion_sort(int arr[],int n){
 }
 void bubble_sort(int arr[],int n){
     for (int i = 0; i < n-1; ++i) {
+        int move=0;
         for (int j = 1; j <n-i ; ++j) {
-            if (arr[j]<arr[j-1])
-                swap(arr[j],arr[j-1]);
+            if (arr[j]<arr[j-1]) {
+                swap(arr[j], arr[j - 1]);
+                move++;
+            }
         }
-
+        if (!move)
+            break;
     }
 }
 void selection_sort(int arr[],int n){
-    for (int i = 0; i <n ; ++i) {
+    for (int i = 0; i <n-1 ; ++i) {
         int mn=i;
         for (int j = i+1; j <n ; ++j) {
             if (arr[j]<arr[mn])
@@ -42,8 +46,8 @@ void shell_sort(int arr[],int n){
     }
 }
 void merg(int arr[],int l,int m,int r){
-   int n1 = m-l + 1;
-  int  n2 =r-m;
+    int n1 = m-l + 1;
+    int  n2 =r-m;
     int  L[n1], R[n2];
     for (int i = 0; i <n1 ; ++i) {
         L[i]=arr[l+i];
@@ -77,17 +81,17 @@ void merge_sort(int arr[],int l,int r){
     }
 }
 int partition(int arr[],int l,int r){
-int i=l;
+    int i=l;
     for (int j = i+1; j <=r ; ++j) {
         if (arr[j]<arr[l]){
             swap(arr[j],arr[++i]);
         }
     }
     swap(arr[l],arr[i]);
-  /*  for (int x = 0; x <=r ; ++x) {
-        cout<<arr[x]<<" ";
-    }
-    cout<<'\n';*/
+    /*  for (int x = 0; x <=r ; ++x) {
+          cout<<arr[x]<<" ";
+      }
+      cout<<'\n';*/
     return i;
 
 }
@@ -101,9 +105,9 @@ void quick_sort(int arr[],int l,int r){
     }
 }
 void count_sort(int arr[],int n,int mx){
-   vector<int>freq(mx+1,0);
-   int temp[n];
-     copy((arr),(arr+n),(temp));
+    vector<int>freq(mx+1,0);
+    int temp[n];
+    copy((arr),(arr+n),(temp));
     for (int i = 0; i <n ; ++i) {
         freq[arr[i]]++;
     }
@@ -115,6 +119,7 @@ void count_sort(int arr[],int n,int mx){
     }
 }
 int main() {
-
-return 0;
+int arr[5]={4,1,2,5,3};
+    bubble_sort(arr,5);
+    return 0;
 }

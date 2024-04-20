@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <stdexcept>
 using namespace std;
 // linked stack
 template<class t>
@@ -17,7 +18,6 @@ public:
     }
     void push(t newval) {
         node *newitem = new node;
-        //we must write this first bec it would be allocated on the stack and would be destroyed when the function or block goes out of scope. Using new, the node is allocated on the heap, and it remains in existence until explicitly deallocated using delete or until the program ends.
         newitem->nextptr = top;
         newitem->val = newval;
         top = newitem;
@@ -30,18 +30,18 @@ public:
 
     void pop() {
         if (isEmpty()) {
-            cout << "Stack is empty\n";
+            throw out_of_range("Stack is empty");
         } else {
             node *temp = top;
             top = top->nextptr;
             temp = temp->nextptr = nullptr;
-            delete temp; //to delete or free memory to avoid memory leak
+            delete temp;
             siz--;
         }
     }
 
     t Top() const {
-        return top->val;
+        return !isEmpty() ? top->data : throw out_of_range("Stack is Empty!");
     }
     int size() const {
         return siz;
@@ -67,21 +67,6 @@ public:
 };
 int main() {
     Stack<int> st;
-    st.push(3);
-    st.push(5);
-    cout << st.Top() << "\n";
-    cout << st.size() << "\n";
-    st.push(11);
-    st.print();
-    st.clear();
-    cout << st.size() << "\n";
-    cout<<(st.isEmpty()?"YES\n":"NO\n");
-   Stack<string>ss;
-    ss.push("mo");
-    ss.push("shawky");
-    ss.push("suiiiii");
-    cout << ss.Top() << "\n";
-    cout << ss.size() << "\n";
-    ss.print();
+
     return 0;
 }

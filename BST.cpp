@@ -6,14 +6,12 @@ class BST {
     struct node {
         node *left, *right;
         t data;
-
         node() {
             data = 0;
             left = right = nullptr;
         }
     };
-
-public:
+private:
     node *root;
     node *insert(node *pn, t n) {
         if (pn == nullptr) {
@@ -27,15 +25,6 @@ public:
         }
         return pn;
     }
-
-    BST() {
-        root = nullptr;
-    }
-
-    void insert(t item) {
-        root = insert(root, item);
-    }
-
     void pre(node *te) {
         if (te == nullptr) {
             return;
@@ -74,12 +63,6 @@ public:
             return search(r->right, item);
         }
     }
-
-    bool search(t item) {
-        node *fr = search(root, item);
-        return !(fr == nullptr);
-    }
-
     node *mn(node *r) {
         if (r == nullptr) {
             return nullptr;
@@ -127,6 +110,38 @@ public:
         }
         return r;
     }
+public:
+    BST() {
+        root = nullptr;
+    }
+    bool search(t item) {
+        node *fr = search(root, item);
+        return !(fr == nullptr);
+    }
+    void insert(t item) {
+        root = insert(root, item);
+    }
+    t min_element(){
+        return mn(root)->data;
+    }
+    t max_element(){
+        return mx(root)->data;
+    }
+    bool Isempty(){
+        return root== nullptr;
+    }
+    void Pre_order(){
+        pre(root);
+    }
+    void Post_order(){
+        post(root);
+    }
+    void IN_order(){
+        in(root);
+    }
+    void Delete_node(t value){
+        Delete(root,value);
+    }
 };
 int main() {
     BST<int> tre;
@@ -139,7 +154,9 @@ int main() {
     tre.insert(9);
     tre.insert(3);
     tre.insert(1);
+    tre.IN_order();
     cout << '\n';
-    tre.Delete(tre.root, 15);
+    tre.Delete_node( 1);
+    tre.IN_order();
     return 0;
 }

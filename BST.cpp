@@ -140,7 +140,7 @@ public:
         in(root);
     }
     void Delete_node(t value){
-        Delete(root,value);
+       root= Delete(root,value);
     }
     void BFS(){
         queue<node*>q;

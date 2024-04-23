@@ -142,6 +142,23 @@ public:
     void Delete_node(t value){
         Delete(root,value);
     }
+    void BFS(){
+        queue<node*>q;
+        q.push(root);
+        while (!q.empty()){
+            int sz=q.size();
+            while (sz--){
+                node *temp=q.front();
+                q.pop();
+                cout<<temp->data<<" ";
+                if (temp->left!= nullptr)
+                    q.push(temp->left);
+                if (temp->right!= nullptr)
+                    q.push(temp->right);
+            }
+            cout<<"\n";
+        }
+    }
 };
 int main() {
     BST<int> tre;
@@ -154,7 +171,7 @@ int main() {
     tre.insert(9);
     tre.insert(3);
     tre.insert(1);
-    tre.IN_order();
+    tre.BFS();
     cout << '\n';
     tre.Delete_node( 1);
     tre.IN_order();

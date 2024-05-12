@@ -1,11 +1,13 @@
 #include <bits/stdc++.h>
+#include <stdexcept>
 using namespace std;
 #define ll long long
 const int N=1e5+2,M=65,mod=1073741824;
 #define Fast ios_base::sync_with_stdio;cin.tie(0);cout.tie(0);
 
+template<class t>
 class Priority_queue{
-    vector<int>v;// 0 based index
+    vector<t>v;// 0 based index
     int heap_size;
     int parent(int inx){
         return (inx-1)/2;
@@ -47,23 +49,23 @@ public:
     int size() const{
         return heap_size;
     }
-    int top(){
+    t top(){
         return v[0];
     }
     bool Empty() const{
         return v.empty();
     }
-    int pop(){
+    t pop(){
         if (heap_size==0){
-            return INT_MIN;
+            throw out_of_range("Priority_queue is empty");
         }
         else if (heap_size==1){
-            int val=v.back();
+            t val=v.back();
             v.pop_back();
             heap_size--;
             return val;
         }
-        int val=v.front();
+        t val=v.front();
         v[0]=v.back();
         v.pop_back();heap_size--;
         heapify(0);
@@ -72,7 +74,20 @@ public:
 };
 int main() {
     Fast
-    Priority_queue m;
-
+    Priority_queue<int> m;
+m.push(3);
+    m.push(8);m.push(2);m.push(6);
+    while (!m.Empty()){
+       cout<<m.top()<<"\n";
+       m.pop();
+    }
+    Priority_queue<char>p;
+    p.push('d');
+    p.push('z');
+    p.push('a');
+    while (!p.Empty()){
+        cout<<p.top()<<"\n";
+        p.pop();
+    }
     return 0;
 }

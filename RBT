@@ -1,0 +1,364 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+template<class t>
+class RBT {
+    struct node {
+        node *left, *right,*parent;
+        t data;
+        char color;
+        node(t d) {
+            data = d;
+            left = right=parent = nullptr;
+            color='R';
+        }
+    };
+private:
+    node *root;
+    void leftRotate(node* x){
+        node* y = x->right;
+        x->right = y->left;
+        if (y->left != nullptr) {
+            y->left->parent = x;
+        }
+        y->parent = x->parent;
+        if (x->parent == nullptr) {
+            root = y;
+        }
+        else if (x == x->parent->left) {//if x is a left child
+            x->parent->left = y;
+        }
+        else { //if x is a right child
+            x->parent->right = y;
+        }
+        y->left = x;
+        x->parent = y;
+    }
+    void rightRotate(node* x){
+        node* y = x->left;
+        x->left = y->right;
+        if (y->right != nullptr) {
+            y->right->parent = x;
+        }
+        y->parent = x->parent;
+        if (x->parent == nullptr) {
+            root = y;
+        }
+        else if (x == x->parent->right) {
+            x->parent->right = y;
+        }
+        else {
+            x->parent->left = y;
+        }
+        y->right = x;
+        x->parent = y;
+    }
+    void fixInsert(node* k)
+    {
+        while (k != root && k->parent->color == 'R') {
+            if (k->parent == k->parent->parent->left) {
+                node* u = k->parent->parent->right; // uncle
+                if (u!= nullptr&&u->color == 'R') {//first case make par and unc black
+                    k->parent->color = 'B';
+                    u->color = 'B';
+                    k->parent->parent->color = 'R';
+                    k = k->parent->parent;
+                }
+                else {
+                    if (k == k->parent->right) {
+                        k = k->parent;
+                        leftRotate(k);
+                    }
+                    k->parent->color = 'B';
+                    k->parent->parent->color = 'R';
+                    rightRotate(k->parent->parent);
+                }
+            }
+            else {
+                node* u = k->parent->parent->left; // uncle
+                if (u!= nullptr&&u->color == 'R') {
+                    k->parent->color = 'B';
+                    u->color = 'B';
+                    k->parent->parent->color = 'R';
+                    k = k->parent->parent;
+                }
+                else {
+                    if (k == k->parent->left) {
+                        k = k->parent;
+                        rightRotate(k);
+                    }
+                    k->parent->color = 'B';
+                    k->parent->parent->color = 'R';
+                    leftRotate(k->parent->parent);
+                }
+            }
+        }
+        root->color = 'B';
+    }
+    void pre(node *te) {
+        if (te == nullptr) {
+            return;
+        }
+        cout << te->data << " ";
+        pre(te->left);
+        pre(te->right);
+    }
+
+    void in(node *te) {
+        if (te == nullptr) {
+            return;
+        }
+        in(te->left);
+        cout << te->data << " ";
+        in(te->right);
+    }
+    void post(node *te) {
+        if (te == nullptr) {
+            return;
+        }
+        post(te->left);
+        post(te->right);
+        cout << te->data << " ";
+    }
+    node *search(node *r, t item) {
+        if (r == nullptr)
+            return nullptr;
+        else if (r->data == item) {
+            return r;
+        } else if (item < r->data) {
+            return search(r->left, item);
+        } else {
+            return search(r->right, item);
+        }
+    }
+    node *mn(node *r) {
+        if (r == nullptr) {
+            return nullptr;
+        }
+        if (r->left == nullptr) {
+            return r;
+        } else
+            return mn(r->left);
+    }
+
+    node *mx(node *r) {
+        if (r == nullptr) {
+            return nullptr;
+        }
+        if (r->right == nullptr) {
+            return r;
+        } else
+            return mx(r->right);
+    }
+    void Delete(node* n,t value){
+        node* temp = nullptr;
+        node* x, * succsessor;
+        while (n != nullptr) {
+            if (n->data == value) {
+                temp = n;
+                break;
+            }
+
+            if (n->data <= value) {
+                n = n->right;
+            } else {
+                n = n->left;
+            }
+        }
+        char cur_color=temp->color;
+        if (temp->left == nullptr) {
+            x = temp->right;
+            rep_parent(temp, temp->right);
+        } else if (temp->right == nullptr) {
+            x = temp->left;
+            rep_parent(temp, temp->left);
+        } else {
+            succsessor = mn(temp->right);
+            cur_color = succsessor->color;
+            x = succsessor->right;
+            if (succsessor->parent == temp) {
+                if (x) x->parent = succsessor;
+            } else {
+               rep_parent(succsessor, succsessor->right);
+                succsessor->right = temp->right;
+                succsessor->right->parent = succsessor;
+            }
+            rep_parent(temp, succsessor);
+            succsessor->left = temp->left;
+            succsessor->left->parent = succsessor;
+            succsessor->color = temp->color;
+        }
+        delete temp;
+        if (cur_color == 'B') {
+            deleteFix(x);
+        }
+    }
+    void deleteFix(node* DB)// DB => Double black
+    {
+        while (DB != root && (DB == nullptr || DB->color == 'B')) {
+            if (DB == DB->parent->left) {
+               node* brother = DB->parent->right;
+                // case 1 : sbiling is red
+                if (brother->color == 'R') {
+                    swap(brother->color , DB->parent->color);
+                    leftRotate(DB->parent);
+                    brother = DB->parent->right;
+                }
+
+                // case 2 : sbiling is black and both children black
+                if ((brother->left == nullptr || brother->left->color == 'B') &&
+                    (brother->right == nullptr || brother->right->color == 'B')) {
+                    brother->color = 'R';
+                    DB = DB->parent;
+                } else {
+
+                    // case 3 : sbiling is black and far of DB is black
+                    if (brother->right == nullptr || brother->right->color == 'B') {
+                        if (brother->left != nullptr) brother->left->color = 'B';
+                        brother->color = 'R';
+                        rightRotate(brother);
+                        brother = DB->parent->right;
+                    }
+                    // case 4
+                    swap(DB->parent->color, brother->color);
+                    leftRotate(DB->parent);
+                    if (brother->right != nullptr) brother->right->color = 'B';
+                    DB = root;
+                }
+            } else {
+                node* w = DB->parent->left;
+                if (w->color == 'R') {
+                    w->color = 'B';
+                    DB->parent->color = 'R';
+                    rightRotate(DB->parent);
+                    w = DB->parent->left;
+                }
+                if ((w->right == nullptr || w->right->color == 'B') &&
+                    (w->left == nullptr || w->left->color == 'B')) {
+                    w->color = 'R';
+                    DB = DB->parent;
+                } else {
+                    if (w->left == nullptr || w->left->color == 'B') {
+                        if (w->right != nullptr) w->right->color = 'B';
+                        w->color = 'R';
+                        leftRotate(w);
+                        w = DB->parent->left;
+                    }
+                    w->color = DB->parent->color;
+                    DB->parent->color = 'B';
+                    if (w->left != nullptr) w->left->color = 'B';
+                    rightRotate(DB->parent);
+                    DB = root;
+                }
+            }
+        }
+        if (DB != nullptr) DB->color = 'B';
+    }
+    void rep_parent(node* u, node* v) {
+        if (u->parent == nullptr) {
+            root = v;
+        } else if (u == u->parent->left) {
+            u->parent->left = v;
+        } else {
+            u->parent->right = v;
+        }
+        if (v != nullptr) {
+            v->parent = u->parent;
+        }
+    }
+
+public:
+   RBT() {
+        root = nullptr;
+    }
+    bool search(t item) {
+        node *fr = search(root, item);
+        return !(fr == nullptr);
+    }
+    void insert(int data)
+    {
+        node* new_node = new node(data);
+
+        node* parent = nullptr;
+        node* current = root;
+
+        // BST insert
+        while (current != nullptr) {
+            parent = current;
+            if (new_node->data < current->data) {
+                current = current->left;
+            }
+            else {
+                current = current->right;
+            }
+        }
+        new_node->parent = parent;
+        if (parent == nullptr) {
+            root = new_node;
+        }
+        else if (new_node->data < parent->data) {
+            parent->left = new_node;
+        }
+        else {
+            parent->right = new_node;
+        }
+        if (new_node->parent == nullptr) {
+            new_node->color = 'B';
+            return;
+        }
+
+        if (new_node->parent->parent == nullptr) {
+            return;
+        }
+        fixInsert(new_node);
+    }
+    t min_element(){
+        return mn(root)->data;
+    }
+    t max_element(){
+        return mx(root)->data;
+    }
+    bool Isempty(){
+        return root== nullptr;
+    }
+    void Pre_order(){
+        pre(root);
+    }
+    void Post_order(){
+        post(root);
+    }
+    void IN_order(){
+        in(root);
+    }
+    void Delete_node(t value){
+        Delete(root,value);
+    }
+    void BFS(){
+        queue<node*>q;
+        q.push(root);
+        while (!q.empty()){
+            int sz=q.size();
+            while (sz--){
+                node *temp=q.front();
+                q.pop();
+                cout<<temp->data<<" "<<temp->color<<"      ";
+                if (temp->left!= nullptr)
+                    q.push(temp->left);
+                if (temp->right!= nullptr)
+                    q.push(temp->right);
+            }
+            cout<<"\n";
+        }
+    }
+};
+int main() {
+    RBT<int> tre;
+   int n=5,x;
+    while (n--){
+        cin>>x;
+        tre.insert(x);
+        tre.BFS();
+        tre.Delete_node(3);
+    }
+    return 0;
+}

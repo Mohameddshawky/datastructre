@@ -144,13 +144,10 @@ private:
         }
     }
     node *mn(node *r) {
-        if (r == nullptr) {
-            return nullptr;
+        while (r->left != nil) {
+            r = r->left;
         }
-        if (r->left == nullptr) {
-            return r;
-        } else
-            return mn(r->left);
+        return r;
     }
 
     node *mx(node *r) {
@@ -342,14 +339,14 @@ public:
 };
 int main() {
     RBT<int> tre;
-    int n=6,x;
+    int n=3,x;
     while (n--){
         cin>>x;
         tre.insert(x);
         tre.BFS();
     }
     tre.Delete_node(2);
-    tre.Delete_node(3);
+
     tre.BFS();
     return 0;
 }
